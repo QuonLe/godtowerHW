@@ -16,14 +16,28 @@ public class GameController : MonoBehaviour {
 	public string levelNumber;
 	public string levelHint;
 	public string nextScene;
-	public string hintScene;
+
+	public List<GameObject> listImage;
+	public Button NextButton;
+
+	private int hintCurrentIndex = 0;
 
 
 
 	// Use this for initialization
 	void Start () {
 		hintText.text = levelHint;
+		StartCoroutine (ChangeTextLevelCoroutine ());
+	}
 
+	IEnumerator ChangeTextLevelCoroutine(){
+	
+		while (true) {
+			yield return new WaitForSeconds (2f);
+			levelText.text = levelNumber;
+			yield return new WaitForSeconds (2f);
+			levelText.text = "LEVELS";
+		}
 	}
 
 	public void checkAnswer(){
@@ -44,8 +58,29 @@ public class GameController : MonoBehaviour {
 	void Update () {
 		
 	}
-	public void nextButton(){
-		SceneManager.LoadScene (hintScene);
+
+
+	public void OnHintButtonClick(){
+		hintCurrentIndex += 1;
+
+		if (hintCurrentIndex == listImage.Count - 1) {
+			NextButton.transform.localScale = 
+				new Vector3 (-1, 1, 1);
+		} else {
+			NextButton.transform.localScale = 
+				new Vector3 (1, 1, 1);
+		}
+
+		if (hintCurrentIndex == listImage.Count) {
+			hintCurrentIndex = 0;
+		}
+		for (int i = 0; i < listImage.Count; i++) {
+			if (i == hintCurrentIndex) {
+				listImage [i].gameObject.SetActive (true);
+			} else {
+				listImage [i].gameObject.SetActive (false);
+			}
+		}			
 	}
 }
 
